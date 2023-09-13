@@ -1,0 +1,41 @@
+.main-aside {
+  width: 100%;
+}
+
+.aside-ad1 {
+  height: auto;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.aside-ad1 img {
+  min-width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+.aside-cat {
+  border: 1px solid var(--abc);
+}
+
+.aside-cat ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.cat-link {
+  padding: 0.5rem;
+  display: block;
+  border-bottom: 1px solid var(--abc);
+}
+
+.cat-link:hover {
+  background: var(--abc);
+}
+
+@media (min-width: 680px) {
+  .main-aside {
+    width: 30%;
+  }
+}

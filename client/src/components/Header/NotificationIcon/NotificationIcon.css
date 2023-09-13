@@ -1,0 +1,12 @@
+.notification-icon {
+  position: relative;
+}
+
+.tatal-notification {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  left: 0;
+  font-weight: bold;
+  color: #ff0000;
+}

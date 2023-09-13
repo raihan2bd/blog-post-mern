@@ -1,0 +1,76 @@
+.me {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: green;
+  border: 1px solid var(--main-blue-color);
+  cursor: pointer;
+}
+
+.me:active {
+  border: 1px solid #c6c6c6;
+  outline: none;
+}
+.me:focus {
+  outline: none;
+}
+
+.me__avatar {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+
+.me__content {
+  position: absolute;
+  width: 200px;
+  right: 1rem;
+  top: 64px;
+  z-index: 10;
+  background: var(--bg);
+  border: 1px solid var(--bc);
+  display: none;
+  box-shadow: 0px 0px 2px 0px black;
+}
+.show-me__content {
+  display: block;
+}
+
+.me__content-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.me__info {
+  padding: 0.625rem;
+  display: flex;
+  justify-content: space-around;
+  background: var(--abg);
+  color: var(--ac);
+}
+
+.me__info-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.me__content-item a {
+  display: block;
+  padding: 0.5rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--bc);
+}
+
+.me__content-item a:hover {
+  background: var(--abc);
+  color: var(--main-blue-color);
+}
+
+.me__action {
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}

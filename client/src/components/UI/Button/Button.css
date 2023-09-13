@@ -1,0 +1,82 @@
+.default-button {
+  padding: 10px;
+  font-size: 1rem;
+  color: var(--ac);
+  background: var(--abg);
+  border: 1px solid var(--bc);
+  cursor: pointer;
+}
+
+.default-button:focus {
+  outline: none;
+}
+
+.default-button:active {
+  outline: none;
+  background: var(--bg);
+  color: var(--c);
+}
+
+.default-button:disabled,
+.default-button[disabled] {
+  border: 1px solid #c6c6c6;
+  background: #e6e6e6;
+  color: #cccccc;
+  cursor: not-allowed;
+}
+
+.success {
+  border: 1px solid #0187e0;
+  color: white;
+  background: #0187e0;
+}
+.success:active {
+  color: #0187e0;
+  background: var(--bg);
+}
+
+.danger {
+  border: 1px solid red;
+  color: white;
+  background: red;
+}
+.danger:active {
+  color: red;
+  background: var(--bg);
+}
+
+.login {
+  color: #0187e0;
+  background: var(--bg);
+  padding: 0.3rem;
+  margin-left: 8px;
+  border: 1px solid #0187e0;
+}
+
+.defult-login {
+  border: 1px solid #0187e0;
+  color: white;
+  background: #0187e0;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.default-login:active {
+  background: white;
+  color: #0187e0;
+  width: 100%;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+@media (min-width: 680px) {
+  .default-button:hover,
+  .default-button:active,
+  .default-button:focus {
+    outline: none;
+    background: var(--bg);
+    color: var(--c);
+  }
+}

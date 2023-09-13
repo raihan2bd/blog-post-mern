@@ -1,0 +1,22 @@
+.admin-page {
+  display: flex;
+  height: 100%;
+}
+
+.admin-page-content {
+  position: relative;
+  width: 100%;
+}
+
+.admin-nav-button {
+  position: absolute;
+  top: 0px;
+  left: 0;
+}
+
+@media (min-width: 680px) {
+  .admin-page-content {
+    width: 70%;
+    margin-left: 30%;
+  }
+}

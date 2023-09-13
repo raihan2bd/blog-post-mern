@@ -1,0 +1,35 @@
+.service {
+  margin: 1rem;
+  background: #ffffff;
+  flex-basis: 280px;
+  flex-grow: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.158), 0 1px 2px rgba(0, 0, 0, 0.486);
+  cursor: pointer;
+}
+
+.service a {
+  color: #333333;
+}
+
+.service-title {
+  padding: 0.5rem;
+  color: #333333;
+}
+
+.service-img {
+  height: 150px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.service-img img {
+  max-width: 100%;
+  transition: 0.5s;
+}
+.service-img img:hover {
+  transform: scale(1.2);
+}
+
+.service-des {
+  padding: 0.5rem;
+}

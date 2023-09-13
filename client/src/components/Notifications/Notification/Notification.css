@@ -1,0 +1,24 @@
+.notification {
+  padding: 0.625rem;
+  border-bottom: 1px solid #c6c6c6;
+  width: 100%;
+  color: #333333;
+}
+
+.notification a {
+  color: #333333;
+}
+
+.ntfc-username {
+  color: var(--main-blue-color);
+}
+
+.ntfc-icon {
+  padding: 0.5rem;
+  color: var(--main-blue-color);
+}
+
+.ntfc-date {
+  color: #a1a1a1;
+  font-size: 0.875rem;
+}
