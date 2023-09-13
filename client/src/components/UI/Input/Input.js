@@ -40,8 +40,9 @@ const Input = ({
         className={inpClass ? ["form-input", inpClass].join(" ") : "form-input"}
         defaultValue={otherProps.value}
         name={otherProps.name}
-        onChange={otherProps.onChange}
-        onClick={otherProps.onClick}
+        onChange={(e) => {
+          otherProps.onChange(e);
+        }}
       >
         <option value="Default" disabled>
           Select Category

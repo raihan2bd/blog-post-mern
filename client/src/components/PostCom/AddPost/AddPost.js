@@ -220,7 +220,6 @@ const AddPost = ({ history }) => {
             value={formData.formControl.cat.value}
             isError={formData.formControl.cat.isError}
             errMsg={formData.formControl.cat.errMsg}
-            onClick={handleClick}
           />
           <Input
             type="textarea"
