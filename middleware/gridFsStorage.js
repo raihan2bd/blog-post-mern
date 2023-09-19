@@ -1,10 +1,9 @@
 const GridStorage = require("multer-gridfs-storage");
-const config = require("config");
 const crypto = require("crypto");
 const path = require("path");
 
 const storage = new GridStorage({
-  url: config.get("mongoURI"),
+  url: process.env.MongoDBURI,
   options: {
     useUnifiedTopology: true,
     useNewUrlParser: true
