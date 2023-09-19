@@ -122,7 +122,7 @@ exports.getFeaturePosts = async (req, res) => {
       .select(
         "-comments -likes -content -feature -author -catId -totalComments -tags"
       )
-      .sort({ date: -1 });
+      .sort({ date: -1 }).populate({path: "thumbId", select: "path"});
     // if (featurePosts.length <= 0) {
     //   return res.status(404).json({ message: "Feature Posts is not found" });
     // }
@@ -143,6 +143,7 @@ exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findById(postId)
       .populate({ path: "author", select: "username avatar" })
+      .populate({path: "thumbId", select: "path"})
       .exec();
     if (!post) {
       return res.status(404).json({ message: "Post not Found" });
@@ -177,6 +178,7 @@ exports.getSearchPost = async (req, res) => {
     .skip((currentPage - 1) * perPage)
     .limit(perPage)
     .populate({ path: "author", select: "username" })
+    .populate({path: "thumbId", select: "path"})
     .exec();
   const totalPost = await Post.find(
     {
@@ -855,6 +857,7 @@ exports.getCatPosts = async (req, res) => {
           .limit(perPage)
           .sort({ date: -1 })
           .populate({ path: "author", select: "username" })
+          .populate({path: "thumbId", select: "path"})
           .exec();
       } else {
         posts = await Post.find({ catId: catId })
@@ -862,12 +865,14 @@ exports.getCatPosts = async (req, res) => {
           .limit(10)
           .sort({ date: -1 })
           .populate({ path: "author", select: "username" })
+          .populate({path: "thumbId", select: "path"})
           .exec();
       }
     } else {
       posts = await Post.find({ catId: catId })
         .sort({ date: -1 })
         .populate({ path: "author", select: "username" })
+        .populate({path: "thumbId", select: "path"})
         .exec();
     }
     // const posts = await Post.find()
@@ -907,6 +912,7 @@ exports.getUserPosts = async (req, res) => {
           .limit(perPage)
           .sort({ date: -1 })
           .populate({ path: "author", select: "username" })
+          .populate({path: "thumbId", select: "path"})
           .exec();
       } else {
         posts = await Post.find({ author: userId })
@@ -914,12 +920,14 @@ exports.getUserPosts = async (req, res) => {
           .limit(10)
           .sort({ date: -1 })
           .populate({ path: "author", select: "username" })
+          .populate({path: "thumbId", select: "path"})
           .exec();
       }
     } else {
       posts = await Post.find({ author: userId })
         .sort({ date: -1 })
         .populate({ path: "author", select: "username" })
+        .populate({path: "thumbId", select: "path"})
         .exec();
     }
     // const posts = await Post.find()
