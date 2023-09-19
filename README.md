@@ -62,9 +62,12 @@ The Blog Post MERN (MongoDB, Express.js, React.js, Node.js) is a full-stack web 
 
 ## 🚀 Live Demo <a name="live-demo"></a>
 - Project Overview:
-  update soon
+![Capture](https://github.com/raihan2bd/blog-post-mern/assets/35267447/66e51500-e8c4-40c3-b58b-3652cabd6eb1)
+![Capture2](https://github.com/raihan2bd/blog-post-mern/assets/35267447/77961d65-c246-405f-a06e-37b097a35154)
+![Capture3](https://github.com/raihan2bd/blog-post-mern/assets/35267447/af810ed3-927b-4603-ac07-7f1e9e168d9c)
+![Capture4](https://github.com/raihan2bd/blog-post-mern/assets/35267447/34513bd8-e43c-44b9-a58d-f9c16cade6ea)
 
-- [Live Demo Link](https://filmwise-front.vercel.app/)
+  
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,7 +79,7 @@ To get a local copy up and running, follow these steps.
 
 In order to run this project you need:
 - Then Make sure you have installed [NodeJs- 16.16.0](https://nodejs.org) Version installed.
-- Then make sure you have installed [MongoDB](https//:mongodb.com) on your local machine or a account on MongoDB cloud.
+- Then make sure you have installed [MongoDB](https//:mongodb.com) on your local machine or an account on the MongoDB cloud.
 - Then make sure you have an account on [Cloudinary](https://cloudinary.com/) to upload and serve files
 
 ### Setup
