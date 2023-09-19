@@ -1,0 +1,36 @@
+.notifications {
+  position: absolute;
+  top: 40px;
+  z-index: 1;
+  right: 0;
+  min-width: 250px;
+  background: #ffffff;
+  border: 1px solid #333333;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: 480px;
+  overflow-y: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.158), 0 1px 2px rgba(0, 0, 0, 0.486);
+}
+
+.show_more_notification_btn {
+  align-self: auto;
+  margin-top: 1rem;
+}
+
+.notification-header {
+  width: 100%;
+  padding: 0.625rem;
+  text-align: center;
+  background: #333333;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.no-notifications {
+  margin-top: auto;
+  margin-bottom: auto;
+}

@@ -1,0 +1,42 @@
+.service-page {
+  margin-top: 1rem;
+}
+
+.service-section {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.service-aside {
+  width: 100%;
+}
+
+.svc__title {
+  background: #e6e6e6;
+  padding: 0.625rem;
+  color: #333333;
+}
+.svc__packages {
+  display: block;
+}
+
+.svc__des {
+  padding: 1rem;
+}
+
+@media (min-width: 680px) {
+  .service-page {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .service-section {
+    width: 68%;
+  }
+  .service-aside {
+    width: 30%;
+  }
+  .svc__packages {
+    display: flex;
+  }
+}

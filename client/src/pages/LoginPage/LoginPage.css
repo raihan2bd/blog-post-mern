@@ -1,0 +1,13 @@
+.form-title {
+  padding: 0.625rem;
+  margin: 0;
+}
+
+.form-action {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.625rem;
+  margin-bottom: 0.625rem;
+  font-size: 0.875rem;
+}

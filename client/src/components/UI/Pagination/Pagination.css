@@ -1,0 +1,18 @@
+.pagination {
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination span {
+  padding: 0.5rem;
+  border: 1px solid #c6c6c6;
+  cursor: pointer;
+  margin: 0.5rem;
+}
+
+.pagination .page {
+  background: var(--main-blue-color);
+  color: white;
+}

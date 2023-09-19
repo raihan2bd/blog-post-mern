@@ -1,0 +1,32 @@
+.menu-icon {
+  font-size: 0.9rem;
+  padding: 4px;
+  border: 1px solid var(--c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  align-self: center;
+  color: var(--c);
+}
+
+.active-menu-icon {
+  color: var(--main-blue-color);
+  border-color: var(--main-blue-color);
+}
+
+.active-menu-icon:hover,
+.active-menu-icon:active {
+  background: var(--bg-color);
+  color: var(--color);
+  border-color: var(--color);
+}
+
+@media (min-width: 680px) {
+  .menu-icon:hover,
+  .menu-icon:active {
+    color: var(--main-blue-color);
+    border-color: var(--main-blue-color);
+  }
+}

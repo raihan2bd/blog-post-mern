@@ -1,0 +1,26 @@
+.more-actions {
+  position: absolute;
+  top: 2.2rem;
+  right: 0px;
+  background: #fff;
+  border: 1px solid #333333;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.158), 0 1px 2px rgba(0, 0, 0, 0.486);
+}
+
+.ma-group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ma-item {
+  width: 100%;
+  color: var(--main-blue-color);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.4rem;
+}
+.ma-item:hover {
+  background: #e9e9e9;
+}

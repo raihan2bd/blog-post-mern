@@ -1,0 +1,32 @@
+.af-info {
+  padding: 0.4rem;
+  color: #4d4d4d;
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.af-like {
+  min-width: 17%;
+}
+
+.af-action-btn {
+  color: var(--main-blue-color);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.af-action-btn:active {
+  color: var(--c);
+  outline: none;
+}
+.af-action-btn:focus {
+  outline: none;
+}
+
+.af-action-btn:disabled {
+  cursor: not-allowed;
+  color: #c6c6c6;
+}

@@ -1,0 +1,12 @@
+.brand__text {
+  font-size: 1.3rem;
+  color: var(--c);
+  padding: 0;
+  margin: 0;
+}
+
+@media (min-width: 680px) {
+  .brand__text {
+    font-size: 1.6rem;
+  }
+}
