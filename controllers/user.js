@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
-const config = require("config");
+const secretKey = process.env.JWT_SECRET
 
 const User = require("../models/User");
 
@@ -80,7 +80,7 @@ exports.login = async (req, res) => {
           role: user.userType
         }
       },
-      config.get("jwtSecret"),
+      secretKey,
       {
         expiresIn: "1h"
       }
