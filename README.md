@@ -61,11 +61,14 @@ The Blog Post MERN (MongoDB, Express.js, React.js, Node.js) is a full-stack web 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🚀 Live Demo <a name="live-demo"></a>
-- Project Overview:
-![Capture](https://github.com/raihan2bd/blog-post-mern/assets/35267447/66e51500-e8c4-40c3-b58b-3652cabd6eb1)
-![Capture2](https://github.com/raihan2bd/blog-post-mern/assets/35267447/77961d65-c246-405f-a06e-37b097a35154)
-![Capture3](https://github.com/raihan2bd/blog-post-mern/assets/35267447/af810ed3-927b-4603-ac07-7f1e9e168d9c)
-![Capture4](https://github.com/raihan2bd/blog-post-mern/assets/35267447/34513bd8-e43c-44b9-a58d-f9c16cade6ea)
+
+![Capture](https://user-images.githubusercontent.com/35267447/269034821-66e51500-e8c4-40c3-b58b-3652cabd6eb1.PNG)
+
+![Capture2](https://user-images.githubusercontent.com/35267447/269034722-77961d65-c246-405f-a06e-37b097a35154.PNG)
+
+![Capture3](https://github-production-user-asset-6210df.s3.amazonaws.com/35267447/269034795-af810ed3-927b-4603-ac07-7f1e9e168d9c.PNG)
+
+![Capture4](https://github-production-user-asset-6210df.s3.amazonaws.com/35267447/269034808-34513bd8-e43c-44b9-a58d-f9c16cade6ea.PNG)
 
   
 
