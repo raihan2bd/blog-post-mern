@@ -2,11 +2,15 @@ import React from "react";
 
 import "./SingleFeaturePost.css";
 
-const SingleFeaturePost = ({ title, _id, thumbnail, clicked }) => {
+const SingleFeaturePost = ({ title, _id, thumbnail, clicked, thumbId }) => {
+  let imageUrl = `/images/${thumbnail}`
+  if (thumbId) {
+    imageUrl = `${thumbId.path}/${thumbnail}`
+  }
   return (
     <div className="single-feature-post">
       <div className="sfp__thumbnail">
-        <img src={`/images/${thumbnail}`} alt={title} />
+        <img src={imageUrl} alt={title} />
       </div>
       <div className="sfp__action">
         <h3>{title}</h3>

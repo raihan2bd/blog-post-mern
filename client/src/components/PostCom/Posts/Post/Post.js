@@ -49,12 +49,16 @@ const Post = props => {
   };
 
   const postDate = formatDate(new Date(props.date));
+  let imageUrl = `/images/${props.thumbnail}`
+  if (props.thumbId) {
+    imageUrl = `${props.thumbId.path}/${props.thumbnail}`
+  }
 
   return (
     <article className="article">
       <div className="article-content">
         <div className="article-thumb">
-          <img src={`/images/${props.thumbnail}`} alt={props.title} />
+          <img src={imageUrl} alt={props.title} />
         </div>
         <h2 className="article-title">
           <Link to={`/posts/${props._id}`}>{props.title}</Link>

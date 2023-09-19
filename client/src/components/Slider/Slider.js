@@ -23,7 +23,7 @@ const Slider = props => {
     ));
   } else if (featurePosts) {
     mySlide = featurePosts.map(i => (
-      <Slide key={i._id} image={i.thumbnail}>
+      <Slide key={i._id} image={i.thumbId.path+'/'+i.thumbnail}>
         <Link className="slide-title" to={`/posts/${i._id}`}>
           {i.title}
         </Link>
