@@ -3,6 +3,7 @@ const multer = require("multer");
 const { body } = require("express-validator");
 const router = express.Router();
 const storage = require("../middleware/gridFsStorage");
+const multerStorate = multer.memoryStorage();
 const fileFilter = require("../middleware/imageUploadFilter");
 
 const isAuth = require("../middleware/isAuth");
@@ -65,7 +66,7 @@ router.get("/search", postControllers.getSearchPost);
 router.post(
   "/",
   isAuth,
-  multer({ storage: storage, fileFilter: fileFilter }).single("thumbnail"),
+  multer({ storage: multerStorate, fileFilter: fileFilter }).single("thumbnail"),
   postControllers.createPost
 );
 

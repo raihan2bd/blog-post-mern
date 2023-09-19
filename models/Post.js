@@ -125,6 +125,11 @@ const PostSchema = new Schema({
   thumbnail: {
     type: String
   },
+  thumbId: {
+    type: Schema.Types.ObjectId,
+    ref: "Image",
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now

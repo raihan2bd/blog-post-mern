@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
+const cld = require("../config/cld");
 
 const Image = require("../models/Image");
 const Post = require("../models/Post");
@@ -15,19 +16,27 @@ exports.createPost = async (req, res) => {
   }
 
   try {
-    const { title, content, catId, tags } = req.body;
-    const file = req.file;
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
 
-    const filename = file.filename;
-    const fileId = file._id;
-    const path = file.bucketName;
+
+    const result = await cld.uploader.upload(
+      dataURI, {
+        resource_type: 'auto'
+      }
+    );
+    const { title, content, catId, tags } = req.body;
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME 
+    const filename = `${result.public_id}.${result.format}`;
+    const fileId = new mongoose.Types.ObjectId();
+    const path = `https://res.cloudinary.com/${cloudName}/image/upload`;
     const userId = req.user.id;
 
     const image = new Image({
       filename,
       userId,
       fileId,
-      path
+      path,
     });
 
     await image.save();
@@ -47,13 +56,13 @@ exports.createPost = async (req, res) => {
       catId,
       tags,
       thumbnail,
-      author: req.user.id
+      thumbId: image._id,
+      author: req.user.id,
     });
     await post.save();
 
     res.status(201).json({ post, message: "Post is successfully created!" });
   } catch (err) {
-    console.log(err.message);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -72,18 +81,21 @@ exports.getPosts = async (req, res) => {
           .limit(perPage)
           .sort({ date: -1 })
           .populate({ path: "author", select: "username" })
+          .populate({path: "thumbId", select: "path"})
           .exec();
-      } else {
-        posts = await Post.find()
+        } else {
+          posts = await Post.find()
           .skip((currentPage - 1) * 10)
           .limit(10)
           .sort({ date: -1 })
+          .populate({path: "thumbId", select: "path"})
           .populate({ path: "author", select: "username" })
           .exec();
-      }
-    } else {
-      posts = await Post.find()
+        }
+      } else {
+        posts = await Post.find()
         .sort({ date: -1 })
+        .populate({path: "thumbId", select: "path"})
         .populate({ path: "author", select: "username" })
         .exec();
     }
@@ -95,7 +107,7 @@ exports.getPosts = async (req, res) => {
       currentPage,
       totalPosts,
       perPage,
-      message: "Post Fetch Successfulley"
+      message: "Post Fetch Successfulley",
     });
   } catch (err) {
     console.log(err.message);
@@ -156,7 +168,7 @@ exports.getSearchPost = async (req, res) => {
   // const posts = await Post.find({ title: regex }).select("title");
   const posts = await Post.find(
     {
-      $text: { $search: str, $caseSensitive: false }
+      $text: { $search: str, $caseSensitive: false },
     },
     { score: { $meta: "textScore" } }
   )
@@ -168,7 +180,7 @@ exports.getSearchPost = async (req, res) => {
     .exec();
   const totalPost = await Post.find(
     {
-      $text: { $search: str, $caseSensitive: false }
+      $text: { $search: str, $caseSensitive: false },
     },
     { score: { $meta: "textScore" } }
   )
@@ -178,7 +190,7 @@ exports.getSearchPost = async (req, res) => {
     message: "Search Success",
     posts: posts,
     currentPage: currentPage,
-    totalPost
+    totalPost,
   });
 };
 
@@ -203,7 +215,7 @@ exports.postLike = async (req, res) => {
     }
 
     const existLike = post.likes.find(
-      i => i.userId.toString() === userId.toString()
+      (i) => i.userId.toString() === userId.toString()
     );
 
     const to = post.author;
@@ -211,14 +223,14 @@ exports.postLike = async (req, res) => {
 
     if (existLike) {
       const newLikes = post.likes.filter(
-        i => i.userId.toString() !== userId.toString()
+        (i) => i.userId.toString() !== userId.toString()
       );
       post.likes = newLikes;
       await post.save();
 
       ///Delete Notification
       let notifications = await Notification.find();
-      const myNotif = notifications.find(i => {
+      const myNotif = notifications.find((i) => {
         return (
           i.from.toString() === from.toString() &&
           i.title === "like" &&
@@ -243,7 +255,7 @@ exports.postLike = async (req, res) => {
           postId: post._id,
           to,
           from,
-          title: "like"
+          title: "like",
         });
         await notification.save();
       } //end of notification
@@ -283,22 +295,22 @@ exports.postAddComment = async (req, res) => {
       userId: user._id,
       avatar: user.avatar,
       username: user.username,
-      text: text
+      text: text,
     };
 
     post.comments.unshift({ comment: { ...newComment } });
 
     let tCom = 0;
-    post.comments.map(i => {
+    post.comments.map((i) => {
       tCom += 1;
-      i.reply.map(j => (tCom += 1));
+      i.reply.map((j) => (tCom += 1));
     });
     post.totalComments = tCom;
     await post.save();
 
     // add notification
     const myCom = post.comments.find(
-      i => i.comment.userId.toString() === user._id.toString()
+      (i) => i.comment.userId.toString() === user._id.toString()
     );
     if (myCom && post.author.toString() !== req.user.id.toString()) {
       const notification = new Notification({
@@ -307,7 +319,7 @@ exports.postAddComment = async (req, res) => {
         postId: post._id,
         comId: myCom._id,
         from: req.user.id,
-        to: post.author
+        to: post.author,
       });
 
       await notification.save();
@@ -316,12 +328,12 @@ exports.postAddComment = async (req, res) => {
     res.status(201).json({
       message: "Comment Successfully Added",
       comments: post.comments,
-      totalComments: post.totalComments
+      totalComments: post.totalComments,
     });
   } catch (err) {
     if (err.kind === "ObjectId") {
       return status(404).json({
-        message: "The Post is not found that you want to add comment"
+        message: "The Post is not found that you want to add comment",
       });
     }
     res.status(500).json({ message: "Server Error" });
@@ -349,7 +361,7 @@ exports.editComment = async (req, res) => {
         .status(404)
         .json({ message: "The Comment you want to edit not found" });
     }
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
     if (!com) {
       return res
         .status(404)
@@ -362,14 +374,14 @@ exports.editComment = async (req, res) => {
         .json({ message: "You do not have access to edit this comment" });
     }
     const comIndex = post.comments.findIndex(
-      i => i._id.toString() === comId.toString()
+      (i) => i._id.toString() === comId.toString()
     );
     // const updatedComment = (com.comment.text = text);
     post.comments[comIndex].comment.text = text;
     await post.save();
     res.status(201).json({
       message: "Comment updated successfully",
-      comment: post.comments[comIndex].comment
+      comment: post.comments[comIndex].comment,
     });
   } catch (err) {
     console.log(err);
@@ -393,7 +405,7 @@ exports.deleteComment = async (req, res) => {
         .status(404)
         .json({ message: "The Comment you want to delete not found" });
     }
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
     if (!com) {
       return res
         .status(404)
@@ -404,11 +416,11 @@ exports.deleteComment = async (req, res) => {
         .status(401)
         .json({ message: "You do not have access to delete this comment" });
     }
-    post.comments = post.comments.filter(i => i._id.toString() !== comId);
+    post.comments = post.comments.filter((i) => i._id.toString() !== comId);
     let tCom = 0;
-    post.comments.map(i => {
+    post.comments.map((i) => {
       tCom += 1;
-      i.reply.map(j => (tCom += 1));
+      i.reply.map((j) => (tCom += 1));
     });
     post.totalComments = tCom;
     await post.save();
@@ -418,7 +430,7 @@ exports.deleteComment = async (req, res) => {
     res.status(200).json({
       comments: post.comments,
       totalComments: post.totalComments,
-      message: "Comment deleted successfully"
+      message: "Comment deleted successfully",
     }); /// end of remove notification
   } catch (err) {
     console.log(err);
@@ -448,22 +460,22 @@ exports.likeComment = async (req, res) => {
         .json({ message: "The comment you want to like is not found" });
     }
 
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
 
     if (!com) {
       return res
         .status(404)
         .json({ message: "The comment you want to like is not found" });
     }
-    const comIndex = post.comments.findIndex(i => i._id.toString() === comId);
+    const comIndex = post.comments.findIndex((i) => i._id.toString() === comId);
 
     const existLike = com.comment.likes.find(
-      i => i.userId.toString() === req.user.id.toString()
+      (i) => i.userId.toString() === req.user.id.toString()
     );
 
     if (existLike) {
       const filterLikes = com.comment.likes.filter(
-        i => i.userId.toString() !== req.user.id.toString()
+        (i) => i.userId.toString() !== req.user.id.toString()
       );
       post.comments[comIndex].comment.likes = filterLikes;
       await post.save();
@@ -473,7 +485,7 @@ exports.likeComment = async (req, res) => {
         title: "like",
         postId,
         comId,
-        from: req.user.id
+        from: req.user.id,
       });
       if (notification) {
         await Notification.deleteOne({ _id: notification._id });
@@ -481,7 +493,7 @@ exports.likeComment = async (req, res) => {
 
       res.status(201).json({
         message: "Comment like has been Removed",
-        likes: post.comments[comIndex].comment.likes
+        likes: post.comments[comIndex].comment.likes,
       });
     } else {
       post.comments[comIndex].comment.likes.unshift({ userId: req.user.id });
@@ -495,14 +507,14 @@ exports.likeComment = async (req, res) => {
           comId,
           msg: "Like your comment",
           to: com.comment.userId,
-          from: req.user.id
+          from: req.user.id,
         });
         await notification.save();
       }
 
       res.status(201).json({
         message: "Comment Like has been Added",
-        likes: post.comments[comIndex].comment.likes
+        likes: post.comments[comIndex].comment.likes,
       });
     }
   } catch (err) {
@@ -528,23 +540,25 @@ exports.postAddCommentReplay = async (req, res) => {
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({
-        message: "The Post Comment is not found that you want to Replay"
+        message: "The Post Comment is not found that you want to Replay",
       });
     }
-    const myComment = post.comments.find(i => i._id.toString() === comId);
+    const myComment = post.comments.find((i) => i._id.toString() === comId);
     if (!myComment) {
       return res.status(404).json({
-        message: "The Post Comment is not found that you want to Replay"
+        message: "The Post Comment is not found that you want to Replay",
       });
     }
-    const myComIndex = post.comments.findIndex(i => i._id.toString() === comId);
+    const myComIndex = post.comments.findIndex(
+      (i) => i._id.toString() === comId
+    );
     const user = await User.findById(req.user.id).select("-password");
     const newCommentReplay = {
       userId: user._id,
       avatar: user.avatar,
       username: user.username,
       text: replayText,
-      _id: new mongoose.Types.ObjectId()
+      _id: new mongoose.Types.ObjectId(),
     };
 
     post.comments[myComIndex].reply.push(newCommentReplay);
@@ -563,7 +577,7 @@ exports.postAddCommentReplay = async (req, res) => {
         from: newCommentReplay.userId,
         postId: post._id,
         comId: comId,
-        repId: newCommentReplay._id
+        repId: newCommentReplay._id,
       });
 
       await notification.save();
@@ -577,7 +591,7 @@ exports.postAddCommentReplay = async (req, res) => {
         from: newCommentReplay.userId,
         postId: post._id,
         comId: comId,
-        repId: newCommentReplay._id
+        repId: newCommentReplay._id,
       });
 
       await notification.save();
@@ -586,13 +600,13 @@ exports.postAddCommentReplay = async (req, res) => {
     res.status(201).json({
       message: "Replay added Successfully",
       replies: post.comments[myComIndex].reply,
-      totalComments: post.totalComments
+      totalComments: post.totalComments,
     });
   } catch (err) {
     console.log(err);
     if (err.kind === "ObjectId") {
       return status(404).json({
-        message: "The Post is not found that you want to add comment"
+        message: "The Post is not found that you want to add comment",
       });
     }
     res.status(500).json({ message: "Server Error" });
@@ -616,31 +630,33 @@ exports.likeComReply = async (req, res) => {
         .json({ message: "The comment reply you want to like is not found" });
     }
 
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
 
     if (!com) {
       return res
         .status(404)
         .json({ message: "The comment reply you want to like is not found" });
     }
-    const comIndex = post.comments.findIndex(i => i._id.toString() === comId);
+    const comIndex = post.comments.findIndex((i) => i._id.toString() === comId);
 
-    const rep = com.reply.find(i => i => i._id.toString() === repId);
+    const rep = com.reply.find((i) => (i) => i._id.toString() === repId);
     if (!rep) {
       return res
         .status(404)
         .json({ message: "The comment reply you want to like is not found" });
     }
 
-    const repIndex = com.reply.findIndex(i => i => i._id.toString() === repId);
+    const repIndex = com.reply.findIndex(
+      (i) => (i) => i._id.toString() === repId
+    );
 
     const existLike = com.reply[repIndex].likes.find(
-      i => i.userId.toString() === req.user.id.toString()
+      (i) => i.userId.toString() === req.user.id.toString()
     );
 
     if (existLike) {
       const filterLikes = com.reply[repIndex].likes.filter(
-        i => i.userId.toString() !== req.user.id.toString()
+        (i) => i.userId.toString() !== req.user.id.toString()
       );
       post.comments[comIndex].reply[repIndex].likes = filterLikes;
       await post.save();
@@ -650,11 +666,11 @@ exports.likeComReply = async (req, res) => {
 
       res.status(201).json({
         message: "Comment reply like has been Removed",
-        likes: post.comments[comIndex].reply[repIndex].likes
+        likes: post.comments[comIndex].reply[repIndex].likes,
       });
     } else {
       post.comments[comIndex].reply[repIndex].likes.unshift({
-        userId: req.user.id
+        userId: req.user.id,
       });
       await post.save();
 
@@ -668,14 +684,14 @@ exports.likeComReply = async (req, res) => {
           msg: "Like your reply",
           repId,
           comId,
-          postId
+          postId,
         });
         await notification.save();
       }
 
       res.status(201).json({
         message: "Comment reply Like has been Added",
-        likes: post.comments[comIndex].reply[repIndex].likes
+        likes: post.comments[comIndex].reply[repIndex].likes,
       });
     }
   } catch (err) {
@@ -712,13 +728,13 @@ exports.putCommentReply = async (req, res) => {
         .json({ message: "The Reply You want to edit is not found" });
     }
 
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
     if (!com) {
       return res
         .status(404)
         .json({ message: "The Reply you want to edit is not found!" });
     }
-    const rep = com.reply.find(i => i._id.toString() === repId);
+    const rep = com.reply.find((i) => i._id.toString() === repId);
     if (!repId) {
       return res
         .status(404)
@@ -730,14 +746,14 @@ exports.putCommentReply = async (req, res) => {
         .status(401)
         .json({ message: "You do not have access to edit this reply" });
     }
-    const comIndex = post.comments.findIndex(i => i._id.toString() === comId);
-    const repIndex = com.reply.findIndex(i => i._id.toString() === repId);
+    const comIndex = post.comments.findIndex((i) => i._id.toString() === comId);
+    const repIndex = com.reply.findIndex((i) => i._id.toString() === repId);
     rep.text = text;
     post.comments[comIndex].reply[repIndex] = rep;
     await post.save();
     res.json({
       message: "Reply is edited successfully",
-      reply: post.comments[comIndex].reply
+      reply: post.comments[comIndex].reply,
     });
   } catch (err) {
     console.log(err);
@@ -767,16 +783,16 @@ exports.deleteCommentReply = async (req, res) => {
         .json({ message: "The Reply you want to delete not found!" });
     }
 
-    const com = post.comments.find(i => i._id.toString() === comId);
+    const com = post.comments.find((i) => i._id.toString() === comId);
     if (!com) {
       return res
         .status(404)
         .json({ message: "The Reply you want to delete not found!" });
     }
 
-    const comIndex = post.comments.findIndex(i => i._id.toString() === comId);
+    const comIndex = post.comments.findIndex((i) => i._id.toString() === comId);
 
-    const rep = com.reply.find(i => i._id.toString() === repId);
+    const rep = com.reply.find((i) => i._id.toString() === repId);
     if (!rep) {
       return res
         .status(404)
@@ -790,13 +806,13 @@ exports.deleteCommentReply = async (req, res) => {
 
     // const repIndex = com.reply.findIndex( i => i._id.toString() === repId);
     const totalReply = post.comments[comIndex].reply.filter(
-      i => i._id.toString() !== repId
+      (i) => i._id.toString() !== repId
     );
     post.comments[comIndex].reply = totalReply;
     let tCom = 0;
-    post.comments.map(i => {
+    post.comments.map((i) => {
       tCom += 1;
-      i.reply.map(j => (tCom += 1));
+      i.reply.map((j) => (tCom += 1));
     });
     post.totalComments = tCom;
     await post.save();
@@ -806,7 +822,7 @@ exports.deleteCommentReply = async (req, res) => {
     res.status(203).json({
       message: "Reply is deleted successfully",
       reply: post.comments[comIndex].reply,
-      totalComments: post.totalComments
+      totalComments: post.totalComments,
     });
   } catch (err) {
     console.log(err);
@@ -862,7 +878,7 @@ exports.getCatPosts = async (req, res) => {
       currentPage,
       totalPosts,
       perPage,
-      message: "Post Fetch Successfulley"
+      message: "Post Fetch Successfulley",
     });
   } catch (err) {
     console.log(err.message);
@@ -914,7 +930,7 @@ exports.getUserPosts = async (req, res) => {
       currentPage,
       totalPosts,
       perPage,
-      message: "Post Fetch Successfulley"
+      message: "Post Fetch Successfulley",
     });
   } catch (err) {
     console.log(err);
