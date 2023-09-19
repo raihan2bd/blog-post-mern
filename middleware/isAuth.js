@@ -4,7 +4,6 @@ const secretKey = process.env.JWT_SECRET
 
 module.exports = async (req, res, next) => {
   const token = req.header("x-auth-token");
-  console.log(secretKey)
   
   if (!token) {
     return res
